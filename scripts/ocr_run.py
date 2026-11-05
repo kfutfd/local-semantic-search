@@ -3,6 +3,7 @@
 Resumable: a page is done when its .txt exists.  Safe to kill and re-run.
 """
 import argparse
+import gc
 import glob
 import hashlib
 import json
@@ -62,9 +63,14 @@ def ocr_one(task):
         # keep line order (top to bottom)
         lines = [x[1] for x in (result or [])]
         text = "\n".join(lines)
+        del result, lines
     except Exception as exc:  # pragma: no cover - defensive
         text = f"[ocr-error] {exc}"
         dt = 0.0
+    # RapidOCR/OpenVINO keep large buffers per page; collect now instead of
+    # waiting for the cyclic GC.  Native buffers still grow, so the pool's
+    # maxtasksperchild/memory watchdog remains the real safety net.
+    gc.collect()
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     tmp = dst + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:

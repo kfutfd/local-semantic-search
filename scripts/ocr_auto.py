@@ -30,14 +30,20 @@ def available_mb():
     return psutil.virtual_memory().available // (1024 * 1024)
 
 
-def pool_rss_mb(pool):
-    """Total resident memory of the pool's worker processes."""
+def max_worker_rss_mb(pool):
+    """Largest resident memory of one pool worker, in MB.
+
+    The budget is per worker: with N workers the total memory is naturally N
+    times larger, so summing would abort every parallel batch as soon as two
+    workers hold their models.
+    """
     if psutil is None:
         return 0
     try:
         me = psutil.Process()
-        return sum(p.memory_info().rss for p in me.children(recursive=True)
-                   if p.is_running()) // (1024 * 1024)
+        rss = [p.memory_info().rss for p in me.children(recursive=True)
+               if p.is_running()]
+        return (max(rss) if rss else 0) // (1024 * 1024)
     except Exception:
         return 0
 
@@ -153,7 +159,7 @@ def main():
             done += 1
             chars += nchars
             if done % 2 == 0:
-                rss = pool_rss_mb(pool)
+                rss = max_worker_rss_mb(pool)
                 peak = max(peak, rss)
                 # unplugging must actually stop the work, not just block new
                 # scans: a batch already running would otherwise keep going
@@ -167,6 +173,7 @@ def main():
     el = max(time.time() - t0, 1e-6)
     out = {"documents": len(items), "pages_done": done,
            "pages_left": len(tasks) - done, "chars": chars,
+           "workers": args.workers,
            "seconds": round(el, 1),
            "pages_per_s": round(done / el, 2), "peak_mb": peak}
     if stopped:
