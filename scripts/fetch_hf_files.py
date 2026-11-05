@@ -1,11 +1,12 @@
-"""Download a fixed list of files from a HF repo through the local proxy."""
+"""Download a fixed list of files from a HF repo (optional bge-m3 updater).
+
+Needs network access to huggingface.co.  If you are behind a proxy, set
+HTTPS_PROXY / HTTP_PROXY yourself before running it.
+"""
 import json
 import os
 import sys
 import urllib.request
-
-os.environ.setdefault("HTTPS_PROXY", "http://127.0.0.1:7897")
-os.environ.setdefault("HTTP_PROXY", "http://127.0.0.1:7897")
 
 REPO = sys.argv[1]
 DEST = sys.argv[2]
