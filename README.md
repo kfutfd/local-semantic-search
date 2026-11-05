@@ -1,5 +1,7 @@
 # 本地语义搜索（可移植版）
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) Windows 10/11 · Python 3.10–3.12 · 全程离线
+
 在 Windows 上离线搜索你的 PDF/文本：**按热键 → 输入一句话 → 直接跳到文件的那一页**。
 不需要联网，不上传任何内容。
 
@@ -148,6 +150,10 @@ index/                     索引（自动生成，可删除重建）
   ocr/pending.json         待 OCR 清单（ingest 生成，ocr_auto 消费）
   daemon.log               运行日志
 ```
+
+## 许可
+
+本项目以 **MIT 许可**开源，见 [LICENSE](LICENSE)。内置模型与第三方依赖的许可见下一节。
 
 ## 第三方组件
 
