@@ -83,6 +83,20 @@
 
 改完需要重启服务（`stop-daemon.cmd` → `start-daemon.cmd`）。
 
+### 16GB 内存的并行 OCR 预设
+
+[`settings.performance.json`](settings.performance.json) 是 16GB 及以上内存的可选预设：
+6 个 OCR worker、每轮 400 页、4 分钟扫描间隔。一批 OCR 结束并重建索引后，
+下一批几乎立即开始，适合一次性清掉大量扫描件。
+
+用法：把文件里的 `<你的用户名>` 换成自己的用户名，覆盖 `settings.json`，然后重启服务。
+
+> 6 个 worker 的峰值约 4GB；8GB 内存的机器不要用这个预设，保留默认 1 个 worker。
+> `ocr_max_worker_mb` 按单个 worker 统计；worker 仍然每 3 页回收一次，防止
+> RapidOCR/OpenVINO 的 native 内存持续增长。
+>
+> 队列清空后仍会每 4 分钟做一次轻量文件扫描；想安静可把 `scan_interval_min` 改回 10。
+
 ## 扫描版 PDF 的 OCR（默认开启）
 
 扫描件没有文字层，直接抽文本是空的。OCR 随 `setup.cmd` 一起装好，**后台自动跑，
