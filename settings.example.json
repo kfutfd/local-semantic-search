@@ -1,0 +1,20 @@
+{
+ "hotkey": "ctrl+alt+space",
+ "model": "bge-small",
+ "device": "auto",
+ "roots": [
+  "C:\\Users\\<你的用户名>\\Desktop",
+  "C:\\Users\\<你的用户名>\\Downloads"
+ ],
+ "scan_interval_min": 10,
+ "idle_unload_min": 10,
+ "mode": "semantic",
+ "scan_on_battery": false,
+ "ocr": true,
+ "ocr_pages_per_run": 120,
+ "ocr_workers": 1,
+ "ocr_max_worker_mb": 1100,
+ "max_results": 10,
+ "window_width": 1040,
+ "window_height": 680
+}

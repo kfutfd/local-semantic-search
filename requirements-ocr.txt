@@ -1,0 +1,2 @@
+# OCR 依赖已并入 requirements.txt；保留此文件只为兼容旧的安装脚本
+rapidocr-openvino==1.3.25
